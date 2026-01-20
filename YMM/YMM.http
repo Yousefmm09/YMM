@@ -1,0 +1,6 @@
+@YMM_HostAddress = http://localhost:5093
+
+GET {{YMM_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
