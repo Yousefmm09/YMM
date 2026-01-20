@@ -1,7 +1,7 @@
 <Solution>
+  <Project Path="YMM.Application/YMM.Application.csproj" Id="e50d41d2-a95f-4efb-9978-10baf9116f59" />
   <Project Path="YMM.Core/YMM.Core.csproj" />
   <Project Path="YMM.Data/YMM.Data.csproj" />
   <Project Path="YMM.Infrastructure/YMM.Infrastructure.csproj" />
-  <Project Path="YMM.Service/YMM.Application.csproj" />
   <Project Path="YMM/YMM.Api.csproj" />
 </Solution>

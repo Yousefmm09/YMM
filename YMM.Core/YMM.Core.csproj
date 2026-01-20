@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YMM.Application\YMM.Application.csproj" />
     <ProjectReference Include="..\YMM.Data\YMM.Data.csproj" />
     <ProjectReference Include="..\YMM.Infrastructure\YMM.Infrastructure.csproj" />
-    <ProjectReference Include="..\YMM.Service\YMM.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

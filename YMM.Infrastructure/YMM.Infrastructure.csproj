@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YMM.Application\YMM.Application.csproj" />
     <ProjectReference Include="..\YMM.Data\YMM.Data.csproj" />
   </ItemGroup>
 
