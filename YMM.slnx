@@ -2,6 +2,6 @@
   <Project Path="YMM.Core/YMM.Core.csproj" />
   <Project Path="YMM.Data/YMM.Data.csproj" />
   <Project Path="YMM.Infrastructure/YMM.Infrastructure.csproj" />
-  <Project Path="YMM.Service/YMM.Service.csproj" />
+  <Project Path="YMM.Service/YMM.Application.csproj" />
   <Project Path="YMM/YMM.Api.csproj" />
 </Solution>

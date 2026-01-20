@@ -9,7 +9,16 @@
   <ItemGroup>
     <ProjectReference Include="..\YMM.Data\YMM.Data.csproj" />
     <ProjectReference Include="..\YMM.Infrastructure\YMM.Infrastructure.csproj" />
-    <ProjectReference Include="..\YMM.Service\YMM.Service.csproj" />
+    <ProjectReference Include="..\YMM.Service\YMM.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Feature\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="13.1.0" />
   </ItemGroup>
 
 </Project>
