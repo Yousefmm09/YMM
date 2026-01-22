@@ -15,6 +15,8 @@ namespace YMM.Infrastructure.Context
         public DbSet<User> Users => Set<User>();
         public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
         public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+        public DbSet<OtpEmail> otpEmails => Set<OtpEmail>();
 
         // Catalog
         public DbSet<Product> Products => Set<Product>();

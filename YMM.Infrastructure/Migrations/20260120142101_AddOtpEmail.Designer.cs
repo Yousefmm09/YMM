@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YMM.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using YMM.Infrastructure.Context;
 namespace YMM.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDb))]
-    partial class AppDbModelSnapshot : ModelSnapshot
+    [Migration("20260120142101_AddOtpEmail")]
+    partial class AddOtpEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,19 +281,13 @@ namespace YMM.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEmail", b =>
+            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEamil", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Attmeps")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
@@ -310,7 +307,7 @@ namespace YMM.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("otpEmails");
+                    b.ToTable("otpEamils");
                 });
 
             modelBuilder.Entity("YMM.Data.Entities.Identity.RefreshToken", b =>
@@ -788,7 +785,7 @@ namespace YMM.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEmail", b =>
+            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEamil", b =>
                 {
                     b.HasOne("YMM.Data.Entities.Identity.User", "User")
                         .WithMany()
