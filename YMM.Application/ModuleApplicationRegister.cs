@@ -13,6 +13,9 @@ namespace YMM.Application
         {
             service.AddTransient<IAuthService, AuthService>();
             service.AddTransient<IEmailService, EmailService>();
+            service.AddTransient<IProduct, ProductSerivce>();
+            service.AddTransient<IBrandService, BrandService>();
+            service.AddTransient<ICategoryService, CategoryService>();
             return service;
         }
 

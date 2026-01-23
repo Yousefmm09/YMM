@@ -12,7 +12,7 @@ using YMM.Infrastructure.Context;
 namespace YMM.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20260120051643_InitCreat")]
+    [Migration("20260123160111_InitCreat")]
     partial class InitCreat
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace YMM.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -281,6 +281,70 @@ namespace YMM.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEmail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Attmeps")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OtpHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("otpEmails");
+                });
+
+            modelBuilder.Entity("YMM.Data.Entities.Identity.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("YMM.Data.Entities.Identity.User", b =>
                 {
                     b.Property<string>("Id")
@@ -476,6 +540,9 @@ namespace YMM.Infrastructure.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("BrandId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -503,6 +570,10 @@ namespace YMM.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
+
+                    b.HasIndex("BrandId1")
+                        .IsUnique()
+                        .HasFilter("[BrandId1] IS NOT NULL");
 
                     b.HasIndex("CategoryId");
 
@@ -727,6 +798,28 @@ namespace YMM.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEmail", b =>
+                {
+                    b.HasOne("YMM.Data.Entities.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("YMM.Data.Entities.Identity.RefreshToken", b =>
+                {
+                    b.HasOne("YMM.Data.Entities.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("YMM.Data.Entities.Identity.UserProfile", b =>
                 {
                     b.HasOne("YMM.Data.Entities.Identity.User", "user")
@@ -765,6 +858,10 @@ namespace YMM.Infrastructure.Migrations
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("YMM.Data.Entities.Brand", null)
+                        .WithOne("Product")
+                        .HasForeignKey("YMM.Data.Entities.Product", "BrandId1");
 
                     b.HasOne("YMM.Data.Entities.Category", "Category")
                         .WithMany()
@@ -835,6 +932,12 @@ namespace YMM.Infrastructure.Migrations
                         .WithMany("Items")
                         .HasForeignKey("WishlistId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("YMM.Data.Entities.Brand", b =>
+                {
+                    b.Navigation("Product")
                         .IsRequired();
                 });
 

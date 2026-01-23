@@ -12,8 +12,8 @@ using YMM.Infrastructure.Context;
 namespace YMM.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20260120142101_AddOtpEmail")]
-    partial class AddOtpEmail
+    [Migration("20260123160519_Update_ProductModel")]
+    partial class Update_ProductModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -281,13 +281,19 @@ namespace YMM.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEamil", b =>
+            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEmail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Attmeps")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
@@ -307,7 +313,7 @@ namespace YMM.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("otpEamils");
+                    b.ToTable("otpEmails");
                 });
 
             modelBuilder.Entity("YMM.Data.Entities.Identity.RefreshToken", b =>
@@ -785,7 +791,7 @@ namespace YMM.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEamil", b =>
+            modelBuilder.Entity("YMM.Data.Entities.Identity.OtpEmail", b =>
                 {
                     b.HasOne("YMM.Data.Entities.Identity.User", "User")
                         .WithMany()

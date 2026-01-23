@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Dto.Product;
+using YMM.Application.Dto.Response;
 using YMM.Data.Entities;
 
 namespace YMM.Application.Abstract.Services
 {
     public interface IProduct
     {
-        Task<AddProductDto> Add(AddProductDto dto);
-        Task<AddProductDto> Update(AddProductDto dto);
+        Task<ApiResponse<ProductDto>> Add(AddProductDto dto);
         Task<string> Delete(int productId);
-        Task<List<Product>> GetAll();
+        Task<List<ProductDto>> GetAll();
+        Task<ProductDto> GetById(int productId);
+
+        Task<UpdateProductDto> UpdateProductDto(UpdateProductDto dto, int productId);
     }
 }

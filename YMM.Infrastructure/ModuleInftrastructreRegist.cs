@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
+using YMM.Application.Abstract;
 using YMM.Application.Abstract.Repositories;
 using YMM.Data.Entities.Identity;
 using YMM.Infrastructure.Context;
@@ -20,6 +21,9 @@ namespace YMM.Infrastructure
         {
             services.AddTransient<IAuthRepo, AuthRepo>();
             services.AddTransient<IOtp,OtpRepo>();
+            services.AddTransient<IProductRepo, Products>();
+            services.AddTransient<IBrandRepo, BrandRepo>();
+            services.AddTransient<ICategoryRepo, CategoryRepo>();
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 // Password settings

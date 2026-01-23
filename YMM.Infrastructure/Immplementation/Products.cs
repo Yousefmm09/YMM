@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Abstract;
 using YMM.Application.Abstract.Repositories;
+using YMM.Application.Dto.Product;
 using YMM.Data.Entities;
 using YMM.Infrastructure.Context;
 
 namespace YMM.Infrastructure.Immplementation
 {
-    public class Products:IProduct
+    public class Products:IProductRepo
     {
         private readonly AppDb _appDb;
         public Products(AppDb appDb)
@@ -26,45 +27,85 @@ namespace YMM.Infrastructure.Immplementation
             return p.Entity;
         }
 
-        public async Task<Product> Delete(Product product)
+        public async Task<Product> Delete( int productId)
         {
-            var p=  _appDb.Products.Remove(product);
+            var deleteProduct = await _appDb.Products.FindAsync(productId);
+            var p=   _appDb.Products.Remove(deleteProduct);
            await  _appDb.SaveChangesAsync();
             return p.Entity; 
         }
 
-        public async Task<List<Product>> GetAll()
+        public async Task<List<ProductDto>> GetAll()
         {
-            var products = await _appDb.Products
-                .AsNoTracking().Select(x => new Product
+            return await _appDb.Products
+                .AsNoTracking()
+                .Include(x => x.Brand)
+                .Include(x => x.Category)
+                .Include(x => x.Variants)
+                .Select(x => new ProductDto
                 {
                     Name = x.Name,
                     Description = x.Description,
                     Price = x.Price,
-                    Brand = new Brand
-                    {
-                        Name = x.Brand.Name
-                    },
-                    Category = new Category
-                    {
-                        Name = x.Category.Name
-                    },
-                    Variants = x.Variants.Select(v => new ProductVariant
+                    BrandName = x.Brand.Name,   
+                    CategoryName = x.Category.Name,
+                    Variants = x.Variants.Select(v => new ProductVariantDto
                     {
                         Size = v.Size,
                         Color = v.Color,
-                        StockQuantity= v.StockQuantity,
+                        StockQuantity = v.StockQuantity
                     }).ToList()
                 })
                 .ToListAsync();
-            return products;
+        }
+
+        public async Task<ProductDto> GetById(int id)
+        {
+            var product = await _appDb.Products.Include(x => x.Category)
+                .Include(x => x.Brand)
+                .Include(x => x.Variants)
+                .Where(x=> x.Id == id)
+                .Select(x => new ProductDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Price = x.Price,
+                    BrandName = x.Brand.Name,
+                    CategoryName = x.Category.Name,
+                    Variants = x.Variants.Select(v => new ProductVariantDto
+                    {
+                        Size = v.Size,
+                        Color = v.Color,
+                        StockQuantity = v.StockQuantity
+                    }).ToList()
+                }).FirstOrDefaultAsync();
+            return product;
         }
 
         public async Task<Product> Update(Product product)
         {
+
             var updatedProduct = _appDb.Products.Update(product);
             await _appDb.SaveChangesAsync();
             return updatedProduct.Entity;
+        }
+        public async Task<UpdateProductDto> UpdateProductDto(UpdateProductDto dto, int productId)
+        {
+            var product = await _appDb.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return null;
+            }
+            
+            product.Name = dto.Name;
+            product.Description = dto.Description;
+            product.Price = dto.Price;
+            product.BrandId = dto.BrandId;
+            product.CategoryId = dto.CategoryId;
+            _appDb.Products.Update(product);
+            await _appDb.SaveChangesAsync();
+            return dto;
         }
     }
 }
