@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace YMM.Application.Dto.Product
 {
-    internal class ProductVariantDto
+    public class ProductVariantDto
     {
+        public string Size { get; set; } = null!;
+        public string Color { get; set; } = null!;
+        public int StockQuantity { get; set; }
     }
 }

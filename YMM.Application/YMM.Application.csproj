@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Dto\Order\" />
     <Folder Include="Dto\Review\" />
-    <Folder Include="Dto\Product\" />
   </ItemGroup>
 
   <ItemGroup>
