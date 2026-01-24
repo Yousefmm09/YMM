@@ -15,6 +15,8 @@ namespace YMM.Application.Dto.Product
         public string BrandName { get; set; }
         public string CategoryName { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Slug { get; set; } = null!;
+        public string SKU {  get; set; }= null!;
         public List<ProductVariantDto> Variants { get; set; } = new List<ProductVariantDto>();
     }
 }

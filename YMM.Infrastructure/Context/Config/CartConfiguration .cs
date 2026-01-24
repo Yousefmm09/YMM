@@ -15,6 +15,7 @@ namespace YMM.Infrastructure.Context.Config
             builder.HasKey(x => x.Id);
 
             builder.HasIndex(x => x.UserId).IsUnique();
+
         }
     }
 

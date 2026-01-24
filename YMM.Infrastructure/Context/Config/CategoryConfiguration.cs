@@ -45,6 +45,7 @@ namespace YMM.Infrastructure.Context.Config
                 .WithOne(p => p.Category)
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(x => x.Slug).IsUnique();
         }
     }
 }

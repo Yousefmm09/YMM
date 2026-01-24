@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using YMM.Application.Abstract.Repositories;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Auth;
+using YMM.Application.Dto.Product;
 
 namespace YMM.Api.Controllers
 {
@@ -11,19 +12,16 @@ namespace YMM.Api.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryRepo _Categories;
-        public CategoryController(ICategoryRepo categories)
+        private readonly ICategoryService _Categories;
+        public CategoryController(ICategoryService categories)
         {
             _Categories = categories;
         }
         [HttpPost("AddCategory")]
-        public async Task<IActionResult> AddCategory([FromBody] string categoryName)
+        public async Task<IActionResult> AddCategory([FromBody] CategoryDto category)
         {
-            var category = new YMM.Data.Entities.Category
-            {
-                Name = categoryName
-            };
-            var result =  await _Categories.AddAsync(category);
+           
+            var result =  await _Categories.AddCategory(category);
             return Ok(result);
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using YMM.Application.Abstract.Repositories;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Auth;
+using YMM.Application.Dto.Product;
 
 namespace YMM.Api.Controllers
 {
@@ -17,13 +18,10 @@ namespace YMM.Api.Controllers
             _brandService = brandService;
         }
         [HttpPost("AddBrand")]
-        public async Task<IActionResult> AddBrand([FromBody] string brandName)
+        public async Task<IActionResult> AddBrand([FromBody] BrandDto dto)
         {
-            var brand = new YMM.Data.Entities.Brand
-            {
-                Name = brandName
-            };
-            var result = await _brandService.AddBrand(brand);
+           
+            var result = await _brandService.AddBrand(dto);
             return Ok(result);
         }
     }

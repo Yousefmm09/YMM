@@ -31,7 +31,7 @@ namespace YMM.Infrastructure.Context.Config
 
             builder.Property(x => x.WebsiteUrl)
                 .HasMaxLength(500);
-
+            builder.HasIndex(x => x.Slug).IsUnique();
             builder.Property(x => x.CreatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");
 

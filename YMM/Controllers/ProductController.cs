@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using YMM.Application.Abstract.Services;
+using YMM.Application.Dto.Common;
 using YMM.Application.Dto.Product;
 
 namespace YMM.Api.Controllers
@@ -44,6 +45,29 @@ namespace YMM.Api.Controllers
             var result = await _product.GetById(id);
             return Ok(result);
         }
-
+        [HttpGet("GetProductPagination")]
+        public async Task<IActionResult> GetProductPagination([FromQuery] PaginationParams paginationParams)
+        {
+            var result = await _product.GetProductPagination(paginationParams);
+            return Ok(result);
+        }
+        [HttpGet("GetProductbySlug")]
+        public async Task<IActionResult> GetProductBySlug([FromQuery]string Name)
+        {
+            var res=await _product.GetProductbySlug(Name);
+            return Ok(res);
+        }
+        [HttpGet("GetProductbySKU")]
+        public async Task<IActionResult> GetProductBySKU([FromQuery]string Name)
+        {
+            var res = await _product.GetProductbySKU(Name);
+            return Ok(res);
+        }
+        [HttpGet("GetProductbyCategoryName")]
+        public async Task<IActionResult> GetProductByCategoryName([FromQuery] string Name)
+        {
+            var res = await _product.GetProductByCategory(Name);
+            return Ok(res);
+        }
     }
 }

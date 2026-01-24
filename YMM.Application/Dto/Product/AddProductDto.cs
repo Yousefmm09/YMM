@@ -8,12 +8,12 @@ namespace YMM.Application.Dto.Product
 {
     public class AddProductDto
     {
-        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
-        public int BrandId { get; set; }   
+        public int BrandId { get; set; }  
+        public string Slug { get; set; } = null!;
         public List<ProductVariantDto> Variants { get; set; } = new List<ProductVariantDto>();
     }
 }

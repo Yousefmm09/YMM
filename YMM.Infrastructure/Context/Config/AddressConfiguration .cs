@@ -23,6 +23,7 @@ namespace YMM.Infrastructure.Context.Config
             builder.Property(x => x.Country).HasMaxLength(100).IsRequired();
             builder.Property(x => x.AddressType).HasMaxLength(20);
 
+
             builder.HasOne(x => x.User)
                 .WithMany(u => u.Addresses)
                 .HasForeignKey(x => x.UserId)

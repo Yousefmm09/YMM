@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Abstract.Repositories;
 using YMM.Application.Abstract.Services;
+using YMM.Application.Dto.Product;
 using YMM.Data.Entities;
 
 namespace YMM.Application.Immplementation
@@ -16,9 +17,15 @@ namespace YMM.Application.Immplementation
         {
             _category = categories;
         }
-        public async Task<string> AddCategory(Category categoryName)
+        public async Task<string> AddCategory(CategoryDto categoryName)
         {
-            var category = await _category.AddAsync(categoryName);
+            var categoryNameExist = new Category
+            {
+                Name = categoryName.Name,
+                Description = categoryName.Description,
+                Slug = categoryName.Slug
+            };
+            var category = await _category.AddAsync(categoryNameExist);
             if(category == null) 
                 return "Failed to add category";
             return "Category added successfully";  

@@ -35,6 +35,7 @@ namespace YMM.Infrastructure.Context.Config
             builder.HasOne(x => x.Category)
                 .WithMany()
                 .HasForeignKey(x => x.CategoryId);
+            builder.HasIndex(x => x.Slug).IsUnique();
         }
     }
 
