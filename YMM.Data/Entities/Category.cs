@@ -28,11 +28,12 @@ namespace YMM.Data.Entities
 
         public bool IsActive { get; set; } = true;
 
-        public int DisplayOrder { get; set; } = 0;
+        public int? DisplayOrder { get; set; } = 0;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
+        public int? ViewCount { get; set; } = 0;
 
         // Navigation Properties
         [ForeignKey("ParentCategoryId")]

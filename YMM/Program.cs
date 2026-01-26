@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using YMM.Api.Middleware;
 using YMM.Application;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Auth;
@@ -80,6 +81,7 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.AddRoles(services);
 }
 app.UseHttpsRedirection();
+app.UseMiddleware<RequestTrackMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
