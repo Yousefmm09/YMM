@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YMM.Application.Dto.Product
+namespace YMM.Application.Dto.Brand
 {
-    public class BrandDto
+    public class CreatBrandDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Slug { get; set; }
-        public int ProductCount {  get; set; }
     }
 }
