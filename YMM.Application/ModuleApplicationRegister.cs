@@ -16,6 +16,8 @@ namespace YMM.Application
             service.AddTransient<IProduct, ProductSerivce>();
             service.AddTransient<IBrandService, BrandService>();
             service.AddTransient<ICategoryService, CategoryService>();
+            service.AddTransient<ICartService, CartService>();
+            service.AddTransient<IAddressService, AdressService>();
             return service;
         }
 
