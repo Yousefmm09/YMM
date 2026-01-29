@@ -201,10 +201,10 @@ namespace YMM.Application.Immplementation
              );
         }
 
-        public async Task<ApiResponse<PaginatedResponse<ProductDto>>> GetProductPagination(PaginationParams paginationParams)
+        public async Task<ApiResponse<PaginatedResponse<ProductDetailDto>>> GetProductPagination(PaginationParams paginationParams)
         {
             var prod = await _repo.GetProductPagination(paginationParams);
-            return new ApiResponse<PaginatedResponse<ProductDto>>
+            return new ApiResponse<PaginatedResponse<ProductDetailDto>>
                 (
                 Success: prod != null ? true : false,
                 Message: prod != null ? "The Products is Retrive Successs" : "Not Found Products",

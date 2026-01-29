@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Common;
 using YMM.Application.Dto.Product;
@@ -22,6 +23,7 @@ namespace YMM.Api.Controllers
             return Ok(result);
         }
         [HttpGet("GetAll")]
+        [OutputCache(PolicyName = "ProductList")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _product.GetAll();
@@ -46,6 +48,7 @@ namespace YMM.Api.Controllers
             return Ok(result);
         }
         [HttpGet("GetProductPagination")]
+        [OutputCache(PolicyName = "ProductList")]
         public async Task<IActionResult> GetProductPagination([FromQuery] PaginationParams paginationParams)
         {
             var result = await _product.GetProductPagination(paginationParams);

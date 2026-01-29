@@ -135,48 +135,48 @@ namespace YMM.Infrastructure.Immplementation
             return products;
         }
 
-        public async Task<PaginatedResponse<ProductDto>> GetProductPagination(PaginationParams paginationParams)
+        public async Task<PaginatedResponse<ProductDetailDto>> GetProductPagination(PaginationParams paginationParams)
         {
-            var query = _appDb.Products.AsQueryable();
-            var totalItems = query.Count();
-            var recordToSkip = (paginationParams.Page - 1) * paginationParams.PageSize;
-            var products = await query.AsNoTracking()
+            
+            var query = _appDb.Products
+                .AsNoTracking()
                 .Include(x => x.Brand)
                 .Include(x => x.Category)
-                .Include(x => x.Variants)
+                .Include(x => x.Variants);
+
+            var totalItems = await query.CountAsync();
+            var recordToSkip = (paginationParams.Page - 1) * paginationParams.PageSize;
+
+            var products = await query
                 .OrderBy(x => x.Id)
-                .Skip(recordToSkip).Take(paginationParams.PageSize)
-                .Select(x => new PaginatedResponse<ProductDto>
+                .Skip(recordToSkip)
+                .Take(paginationParams.PageSize)
+                .Select(x => new ProductDetailDto
                 {
-                    Items = new List<ProductDto>
-                    {
-                        new ProductDto
-                        {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Description = x.Description,
-                            Price = x.Price,
-                            BrandName = x.Brand.Name,
-                            CategoryName = x.Category.Name,
-                            CreatedAt = x.CreatedAt,
-                            Variants = x.Variants.Select(v => new ProductVariantDto
-                            {
-                                Size = v.Size,
-                                Color = v.Color,
-                                StockQuantity = v.StockQuantity
-                            }).ToList()
-                        }
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Price = x.Price,
+                    BrandName = x.Brand.Name,
+                    CategoryName = x.Category.Name,
+                    CreatedAt = x.CreatedAt,
+                    SKU = x.SKU,
+                    Slug = x.Slug,
+                    AvailableSizes=new List<string>(x.Variants.Select(v=>v.Size).Distinct()),
+                    AvailableColors=new List<string>(x.Variants.Select(v=>v.Color).Distinct()),
+                })
+                .ToListAsync();
 
-                    },
-                    Page = paginationParams.Page,
-                    TotalItems = totalItems,
-                    HasNextPage = recordToSkip + paginationParams.PageSize < totalItems,
-                    HasPreviousPage = recordToSkip > 0,
-                    PageSize = paginationParams.PageSize,
-                    TotalPages = (int)Math.Ceiling((double)totalItems / paginationParams.PageSize)
-                }).ToListAsync();
-            return products.FirstOrDefault();
-
+            return new PaginatedResponse<ProductDetailDto>
+            {
+                Items = products,
+                Page = paginationParams.Page,
+                TotalItems = totalItems,
+                HasNextPage = recordToSkip + paginationParams.PageSize < totalItems,
+                HasPreviousPage = recordToSkip > 0,
+                PageSize = paginationParams.PageSize,
+                TotalPages = (int)Math.Ceiling((double)totalItems / paginationParams.PageSize)
+            };
         }
 
         public async Task<Product> Update(Product product)

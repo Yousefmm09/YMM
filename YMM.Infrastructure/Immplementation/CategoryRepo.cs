@@ -84,11 +84,16 @@ namespace YMM.Infrastructure.Immplementation
         }
         public async Task<PaginatedResponse<CategoryDetailsDto>> GetCategoryPagination(PaginationParams pagination)
         {
-            var query = _appDb.Categories.AsNoTracking();
+            // Optimized query: Single database round-trip with proper includes
+            // Fixes N+1 query problem identified in performance analysis
+            var query = _appDb.Categories
+                .AsNoTracking()
+                .Include(c => c.Products); // Eager load products to avoid N+1
 
             var totalItems = await query.CountAsync();
 
             var categories = await query
+                .OrderBy(c => c.Id) // Add explicit ordering for consistent pagination
                 .Skip((pagination.Page - 1) * pagination.PageSize)
                 .Take(pagination.PageSize)
                 .Select(c => new CategoryDetailsDto
@@ -97,9 +102,8 @@ namespace YMM.Infrastructure.Immplementation
                     Name = c.Name,
                     Description = c.Description,
                     IsActive = c.IsActive,
-                    ProductCount = c.Products.Where(x=>x.CategoryId==c.Id).Count(),
-                    Products =_appDb.Products
-                        .Where(p => p.CategoryId == c.Id)
+                    ProductCount = c.Products.Count(), // Use loaded collection, not separate query
+                    Products = c.Products
                         .Select(p => new ProductDto
                         {
                             Id = p.Id,

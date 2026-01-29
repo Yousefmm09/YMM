@@ -45,7 +45,7 @@ namespace YMM.Infrastructure.Immplementation
             ProductVariant variant = null;
             if (dto.VariantId.HasValue)
             {
-                variant = product.Variants.FirstOrDefault(v => v.Id == dto.VariantId.Value);
+                variant =  product.Variants.FirstOrDefault(v => v.Id == dto.VariantId.Value);
                 if (variant == null)
                 {
                     return new ApiResponse<CartDto>
@@ -75,9 +75,9 @@ namespace YMM.Infrastructure.Immplementation
             && x.Variant.Id == dto.VariantId && x.CartId == cart.Id);
             if(existingItem != null)
             {
-                var newQuantity = existingItem.Quantity + dto.Quantity;
-                variant.StockQuantity = variant.StockQuantity - dto.Quantity;
-                var availableStock = variant?.StockQuantity ?? int.MaxValue;
+                var newQuantity = existingItem.Quantity + dto.Quantity; // 0+2=2
+                variant.StockQuantity = variant.StockQuantity - dto.Quantity; // 10-2=8 
+                var availableStock = variant?.StockQuantity ?? int.MaxValue; // 8
                 if (newQuantity > availableStock)
                 {
                     return new ApiResponse<CartDto>
@@ -232,9 +232,9 @@ namespace YMM.Infrastructure.Immplementation
 
         public async Task<ApiResponse<CartDto>> RemoveFromCartAsync(string userId, int cartItemId)
         {
-            var cartItem =  _appDb.CartItems.Include(x => x.Cart)
+            var cartItem =  _appDb.CartItems.Include(x => x.Cart).Include(x=>x.Variant)
                 .Include(x => x.Product).FirstOrDefault(x => x.Id == cartItemId);
-            var variant = await _appDb.ProductVariants.FirstOrDefaultAsync(x => x.Id == cartItem.VariantId);
+            var variant = await _appDb.ProductVariants.AsNoTracking().FirstOrDefaultAsync(x => x.Id == cartItem.VariantId);
             if (cartItem == null)
                 return new ApiResponse<CartDto>
                (

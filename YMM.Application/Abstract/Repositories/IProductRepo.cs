@@ -18,7 +18,7 @@ namespace YMM.Application.Abstract
         Task<ProductDto> GetById(int id);
         Task<UpdateProductDto> UpdateProductDto(UpdateProductDto dto, int productId);
 
-        Task<PaginatedResponse<ProductDto>> GetProductPagination(PaginationParams paginationParams);
+        Task<PaginatedResponse<ProductDetailDto>> GetProductPagination(PaginationParams paginationParams);
         Task<ProductDto> GetProductbySlug(string slug);
         Task<ProductDto> GetProductbySKU(string sku);
         Task<List<ProductDto>> GetProductByCategory(string CategoryName);

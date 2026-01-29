@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Immplementation;
+using YMM.Infrastructure.Caching;
 
 namespace YMM.Application
 {
@@ -17,7 +18,9 @@ namespace YMM.Application
             service.AddTransient<IBrandService, BrandService>();
             service.AddTransient<ICategoryService, CategoryService>();
             service.AddTransient<ICartService, CartService>();
+            service.AddTransient<IOrderService, OrderService>();
             service.AddTransient<IAddressService, AdressService>();
+            service.AddScoped<ICacheService, MemoryCacheService>();
             return service;
         }
 

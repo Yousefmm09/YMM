@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using YMM.Application.Abstract.Repositories;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Auth;
@@ -58,6 +59,7 @@ namespace YMM.Api.Controllers
             return Ok(result);
         }
         [HttpGet("CategoryPagination")]
+        [OutputCache(PolicyName = "CategoryList")]
         public async Task<IActionResult> GetCategoryPagination([FromQuery] PaginationParams paginationParams)
         {
             var result = await _Categories.GetCategoryPagination(paginationParams);
