@@ -55,13 +55,13 @@ namespace YMM.Api.Controllers
             return Ok(result);
         }
         [HttpGet("GetProductbySlug")]
-        public async Task<IActionResult> GetProductBySlug([FromQuery]string Name)
+        public async Task<IActionResult> GetProductBySlug([FromQuery] string Name)
         {
-            var res=await _product.GetProductbySlug(Name);
+            var res = await _product.GetProductbySlug(Name);
             return Ok(res);
         }
         [HttpGet("GetProductbySKU")]
-        public async Task<IActionResult> GetProductBySKU([FromQuery]string Name)
+        public async Task<IActionResult> GetProductBySKU([FromQuery] string Name)
         {
             var res = await _product.GetProductbySKU(Name);
             return Ok(res);
@@ -70,6 +70,18 @@ namespace YMM.Api.Controllers
         public async Task<IActionResult> GetProductByCategoryName([FromQuery] string Name)
         {
             var res = await _product.GetProductByCategory(Name);
+            return Ok(res);
+        }
+        [HttpGet("GetProductFilterByFilter")]
+        public async Task<IActionResult> GetProductFilterByFilter([FromQuery] PaginationParams paginationParams, [FromQuery] ProductFilterDto dto)
+        {
+            var res = await _product.GetProductFilterByFilter(paginationParams, dto);
+            return Ok(res);
+        }
+        [HttpGet("GetProductSearchSuggestions")]
+        public async Task<IActionResult> GetProductSearchSuggestions([FromQuery] string query)
+        {
+            var res = await _product.GetProductSearchSuggestions(query);
             return Ok(res);
         }
     }

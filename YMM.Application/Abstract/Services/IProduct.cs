@@ -22,7 +22,7 @@ namespace YMM.Application.Abstract.Services
         Task<ApiResponse<ProductDto>> GetProductbySlug(string slug);
         Task<ApiResponse<ProductDto>> GetProductbySKU(string sku);
         Task<ApiResponse<List<ProductDto>>> GetProductByCategory(string CategoryName);
-
-
+        Task<List<ApiResponse<ProductFiltersResponseDto>>> GetProductFilterByFilter(PaginationParams pagination, ProductFilterDto dto);
+        Task<ApiResponse<List<ProductSearchSuggestionDto>>> GetProductSearchSuggestions(string query);
     }
 }

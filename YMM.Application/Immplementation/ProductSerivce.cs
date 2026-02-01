@@ -235,5 +235,28 @@ namespace YMM.Application.Immplementation
                  TraceId: Guid.NewGuid().ToString()
                  );
         }
+        public async Task<List<ApiResponse<ProductFiltersResponseDto>>> GetProductFilterByFilter(PaginationParams pagination, ProductFilterDto dto)
+        {
+            var products = await _repo.GetProductFilterByFilter(pagination, dto);
+            var responseList = new List<ApiResponse<ProductFiltersResponseDto>>();
+            foreach (var product in products)
+            {
+                var response = new ApiResponse<ProductFiltersResponseDto>
+                (
+                    Success: products != null ? true : false,
+                    Message: product != null ? "Product filters retrieved successfully" : "No products found with the given filters",
+                    Data: product != null ? product : null,
+                    Errors: product != null ? null : new[] { "No products match the specified filters" },
+                    TraceId: Guid.NewGuid().ToString()
+                );
+                responseList.Add(response);
+            }
+            return responseList;
+        }
+
+        public Task<ApiResponse<List<ProductSearchSuggestionDto>>> GetProductSearchSuggestions(string query)
+        {
+            return _repo.GetProductSearchSuggestions(query);
+        }
     }
 }

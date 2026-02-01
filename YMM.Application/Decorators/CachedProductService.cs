@@ -114,5 +114,22 @@ namespace YMM.Application.Decorators
             
             return result;
         }
+        public async Task<List<ApiResponse<ProductFiltersResponseDto>>> GetProductFilterByFilter(PaginationParams pagination, ProductFilterDto dto)
+        {
+            // Caching can be complex for filter-based queries; skipping cache for simplicity
+            var cacheKey = $"{ProductPaginationCacheKeyPrefix}{pagination.Page}:{pagination.PageSize}";
+            return await _cacheService.GetOrCreateAsync(
+                cacheKey,
+                () => _innerService.GetProductFilterByFilter(pagination,dto),
+                TimeSpan.FromMinutes(5));
+        }
+        public async Task<ApiResponse<List<ProductSearchSuggestionDto>>> GetProductSearchSuggestions(string query)
+        {
+            var cacheKey = $"{ProductCacheKeyPrefix}search:{query}";
+            return await _cacheService.GetOrCreateAsync(
+                cacheKey,
+                () => _innerService.GetProductSearchSuggestions(query),
+                TimeSpan.FromMinutes(10));
+        }
     }
 }
