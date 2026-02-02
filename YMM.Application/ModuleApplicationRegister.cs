@@ -21,6 +21,7 @@ namespace YMM.Application
             service.AddTransient<IOrderService, OrderService>();
             service.AddTransient<IAddressService, AdressService>();
             service.AddScoped<ICacheService, MemoryCacheService>();
+            service.AddTransient<IReviewService, ReviewService>();  
             return service;
         }
 

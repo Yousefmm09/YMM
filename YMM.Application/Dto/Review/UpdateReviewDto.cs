@@ -6,7 +6,7 @@ namespace YMM.Application.Dto.Review
     public class UpdateReviewDto
     {
         [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
-        public int? Rating { get; set; }
+        public int Rating { get; set; }
 
         [MaxLength(200)]
         public string? Title { get; set; }
@@ -14,6 +14,6 @@ namespace YMM.Application.Dto.Review
         [MaxLength(2000)]
         public string? Comment { get; set; }
 
-        public List<string>? Images { get; set; }
+        public string? Images { get; set; }
     }
 }

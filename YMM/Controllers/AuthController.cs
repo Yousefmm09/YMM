@@ -54,11 +54,11 @@ namespace YMM.Api.Controllers
             return BadRequest(ModelState.Select(x => x.Value));
         }
         //[HttpPost("VerifyOtp")]
-        //public async Task<IActionResult> VerifyOtp(string email,string otp)
+        //public async Task<IActionResult> VerifyOtp(string email, string otp)
         //{
         //    if (ModelState.IsValid)
         //    {
-        //        var rfToken = await _Auth.VerifyEmailAsync(email,otp);
+        //        var rfToken = await _Auth.VerifyOtpAsync(email, otp);
         //        if (rfToken == null)
         //            return BadRequest(rfToken);
         //        return Ok(rfToken);
@@ -97,16 +97,16 @@ namespace YMM.Api.Controllers
             }
             return BadRequest(ModelState);
         }
-        //[HttpPost("ChangePassword")]
-        //public async Task<IActionResult> ChangePassword([FromQuery] ChangePasswordDto dto)
-        //{
-        //    if(ModelState.IsValid)
-        //    {
-        //        var cPassword= await _Auth.ResetPasswordAsync(dto);
-        //        return Ok(cPassword);
-        //    }
-        //    return BadRequest(ModelState);
-        //}
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromQuery] ResetPasswordRequestDto dto)
+        {
+            if (ModelState.IsValid)
+            {
+                var cPassword = await _Auth.ResetPasswordAsync(dto);
+                return Ok(cPassword);
+            }
+            return BadRequest(ModelState);
+        }
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordRequestDto dto)
         {

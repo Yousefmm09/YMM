@@ -21,6 +21,6 @@ namespace YMM.Application.Dto.Review
         [MaxLength(2000)]
         public string Comment { get; set; } = null!;
 
-        public List<string>? Images { get; set; }
+        public string? Images { get; set; }
     }
 }
