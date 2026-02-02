@@ -8,8 +8,6 @@ namespace YMM.Application.Dto.Review
         [Required]
         public int ProductId { get; set; }
 
-        [Required]
-        public int OrderId { get; set; }
 
         [Required]
         [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
