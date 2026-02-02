@@ -53,8 +53,8 @@ namespace YMM.Data.Entities
         [ForeignKey("UserId")]
         public virtual User User { get; set; } = null!;
 
-        [ForeignKey("OrderId")]
-        public virtual Order Order { get; set; } = null!;
+        //[ForeignKey("OrderId")]
+        //public virtual Order Order { get; set; } = null!;
 
         public virtual ICollection<ReviewHelpful> HelpfulMarks { get; set; } = new List<ReviewHelpful>();
     }
