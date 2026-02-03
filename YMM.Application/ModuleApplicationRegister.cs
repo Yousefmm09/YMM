@@ -23,6 +23,7 @@ namespace YMM.Application
             service.AddScoped<ICacheService, MemoryCacheService>();
             service.AddTransient<IReviewService, ReviewService>(); 
             service.AddTransient<IWishListService, WishListService>();
+            service.AddTransient<ICouponsService,CouponService>();
             return service;
         }
 

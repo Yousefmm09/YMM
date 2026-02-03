@@ -16,8 +16,8 @@ namespace YMM.Data.Entities
         [Required]
         public string UserId { get; set; } = null!;
 
-        [Required]
-        public int OrderId { get; set; }
+        //[Required]
+        //public int OrderId { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal DiscountAmount { get; set; }
@@ -31,7 +31,7 @@ namespace YMM.Data.Entities
         [ForeignKey("UserId")]
         public virtual User User { get; set; } = null!;
 
-        [ForeignKey("OrderId")]
-        public virtual Order Order { get; set; } = null!;
+        //[ForeignKey("OrderId")]
+        //public virtual Order Order { get; set; } = null!;
     }
 }

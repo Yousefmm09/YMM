@@ -29,6 +29,7 @@ namespace YMM.Infrastructure
             services.AddTransient<IOrderRepo, OrderRepo>();
             services.AddTransient<IReview, ReviewRepo>();
             services.AddTransient<IWishList, WishListRepo>();
+            services.AddTransient<ICouponsRepo, CouponsRepo>();
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 // Password settings
