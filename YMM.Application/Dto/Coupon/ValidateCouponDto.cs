@@ -8,9 +8,9 @@ namespace YMM.Application.Dto.Coupon
         [MaxLength(50)]
         public string Code { get; set; } = null!;
 
-        [Required]
-        [Range(0.01, double.MaxValue)]
-        public decimal CartTotal { get; set; }
+        //[Required]
+        //[Range(0.01, double.MaxValue)]
+        //public decimal CartTotal { get; set; }
     }
 
     public class ValidateCouponResponseDto

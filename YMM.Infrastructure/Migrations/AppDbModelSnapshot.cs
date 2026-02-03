@@ -569,9 +569,6 @@ namespace YMM.Infrastructure.Migrations
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UsedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -583,11 +580,9 @@ namespace YMM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
                     b.HasIndex("UserId");
 
-                    b.HasIndex("CouponId", "UserId", "OrderId")
+                    b.HasIndex("CouponId", "UserId")
                         .IsUnique();
 
                     b.ToTable("CouponUsages", (string)null);
@@ -1410,8 +1405,6 @@ namespace YMM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
@@ -1798,12 +1791,6 @@ namespace YMM.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YMM.Data.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("YMM.Data.Entities.Identity.User", "User")
                         .WithMany("CouponUsages")
                         .HasForeignKey("UserId")
@@ -1811,8 +1798,6 @@ namespace YMM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Coupon");
-
-                    b.Navigation("Order");
 
                     b.Navigation("User");
                 });
@@ -2012,12 +1997,6 @@ namespace YMM.Infrastructure.Migrations
 
             modelBuilder.Entity("YMM.Data.Entities.Review", b =>
                 {
-                    b.HasOne("YMM.Data.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("YMM.Data.Entities.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
@@ -2029,8 +2008,6 @@ namespace YMM.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Order");
 
                     b.Navigation("Product");
 

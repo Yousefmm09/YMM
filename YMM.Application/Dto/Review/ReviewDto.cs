@@ -22,7 +22,7 @@ namespace YMM.Application.Dto.Review
         public DateTime? UpdatedAt { get; set; }
     }
 
-    public class ReviewSummaryDto
+    public class ReviewSummaryDto 
     {
         public int TotalReviews { get; set; }
         public decimal AverageRating { get; set; }

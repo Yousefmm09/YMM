@@ -24,6 +24,12 @@ namespace YMM.Infrastructure
             services.AddTransient<IProductRepo, Products>();
             services.AddTransient<IBrandRepo, BrandRepo>();
             services.AddTransient<ICategoryRepo, CategoryRepo>();
+            services.AddTransient<ICartRepo, CartRepo>();
+            services.AddTransient<IAdress, AdressRepo>();
+            services.AddTransient<IOrderRepo, OrderRepo>();
+            services.AddTransient<IReview, ReviewRepo>();
+            services.AddTransient<IWishList, WishListRepo>();
+            services.AddTransient<ICouponsRepo, CouponsRepo>();
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 // Password settings

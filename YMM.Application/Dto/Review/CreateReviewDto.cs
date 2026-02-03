@@ -8,8 +8,6 @@ namespace YMM.Application.Dto.Review
         [Required]
         public int ProductId { get; set; }
 
-        [Required]
-        public int OrderId { get; set; }
 
         [Required]
         [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
@@ -23,6 +21,6 @@ namespace YMM.Application.Dto.Review
         [MaxLength(2000)]
         public string Comment { get; set; } = null!;
 
-        public List<string>? Images { get; set; }
+        public string? Images { get; set; }
     }
 }

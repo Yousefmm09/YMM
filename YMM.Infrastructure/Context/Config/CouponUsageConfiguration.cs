@@ -24,13 +24,13 @@ namespace YMM.Infrastructure.Context.Config
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.Order)
-                .WithMany()
-                .HasForeignKey(x => x.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //builder.HasOne(x => x.Order)
+            //    .WithMany()
+            //    .HasForeignKey(x => x.OrderId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             // Unique constraint: one coupon per user per order
-            builder.HasIndex(x => new { x.CouponId, x.UserId, x.OrderId })
+            builder.HasIndex(x => new { x.CouponId, x.UserId })
                 .IsUnique();
         }
     }

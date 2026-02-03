@@ -2,7 +2,7 @@ using YMM.Application.Dto.Common;
 
 namespace YMM.Application.Dto.Product
 {
-    public class ProductFilterDto : PaginationParams
+    public class ProductFilterDto :PaginationParams
     {
         public string? Search { get; set; }
         public int? CategoryId { get; set; }
