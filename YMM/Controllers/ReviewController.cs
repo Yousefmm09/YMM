@@ -84,5 +84,15 @@ namespace YMM.Api.Controllers
             }
             return BadRequest(result);
         }
+        [HttpPost("ApproveReview/{Id}")]
+        public async Task<IActionResult> ApproveReview([FromRoute] int Id)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _reviewService.ApproveReview(Id);
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
     }
 }

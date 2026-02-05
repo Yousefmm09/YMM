@@ -17,5 +17,6 @@ namespace YMM.Application.Abstract.Services
         Task<ApiResponse<bool>> UnmarkReviewAsHelpfulAsync(int reviewId);
         Task<string> DeleteReviewAsync(int reviewId);
         Task<ApiResponse<UpdateReviewDto>> UpdateReviewAsync(UpdateReviewDto updateReviewDto, int reviewId);
+        Task<string> ApproveReview(int reviewId);
     }
 }
