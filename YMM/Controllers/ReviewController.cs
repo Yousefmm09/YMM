@@ -55,9 +55,9 @@ namespace YMM.Api.Controllers
             return BadRequest(result);
         }
         [HttpGet("summary/{productId}")]
-        public async Task<IActionResult> GetReviewSummaryByProductId([FromRoute] int productId)
+        public async Task<IActionResult> GetReviewSummaryByProductId([FromRoute] int productId,CancellationToken ct)
         {
-            var result = await _reviewService.GetReviewSummaryByProductIdAsync(productId);
+            var result = await _reviewService.GetReviewSummaryByProductIdAsync(productId,ct);
             if (result.Success)
             {
                 return Ok(result);

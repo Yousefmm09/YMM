@@ -133,7 +133,7 @@ namespace YMM.Infrastructure.Immplementation
                 );
         }
 
-        public async Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId)
+        public async Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId,CancellationToken ct)
         {
             var query = _appDb.Reviews.Include(x => x.Product).Where(x=>x.ProductId==productId).AsNoTracking().AsQueryable();
             if(query.Count() < 0)
@@ -158,7 +158,7 @@ namespace YMM.Infrastructure.Immplementation
                 OneStarCount = query.Count(x => x.Rating == 1),
                 TotalReviews = countofReviews,
             });
-            var result = await SummryOfReview.FirstOrDefaultAsync();
+            var result = await SummryOfReview.FirstOrDefaultAsync(ct);
             return new ApiResponse<ReviewSummaryDto>
                 (
                     Success: true,

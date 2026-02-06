@@ -45,9 +45,9 @@ namespace YMM.Application.Immplementation
             var res =  await _reviewRepository.ApproveReview(reviewId);
             return res;
         }
-        public Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId)
+        public Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId,CancellationToken ct)
         {
-            var result = _reviewRepository.GetReviewSummaryByProductIdAsync(productId);
+            var result = _reviewRepository.GetReviewSummaryByProductIdAsync(productId,ct);
             return result;
         }
 
