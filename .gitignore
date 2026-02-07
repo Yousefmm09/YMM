@@ -30,6 +30,7 @@ bld/
 *.md
 *.txt
 *.log
+*.rovodev
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
