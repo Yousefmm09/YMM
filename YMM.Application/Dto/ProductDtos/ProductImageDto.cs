@@ -1,6 +1,6 @@
 using System;
 
-namespace YMM.Application.Dto.Product
+namespace YMM.Application.Dto.ProductDtos
 {
     public class ProductImageDto
     {

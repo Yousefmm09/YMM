@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YMM.Application.Dto.Product
+namespace YMM.Application.Dto.ProductDtos
 {
     public class ProductVariantDto
     {

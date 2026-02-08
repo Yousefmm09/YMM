@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Dto.Brand;
-using YMM.Application.Dto.Product;
+using YMM.Application.Dto.ProductDtos;
 using YMM.Application.Dto.Response;
 using YMM.Data.Entities;
 

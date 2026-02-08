@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Dto.Category;
 using YMM.Application.Dto.Common;
-using YMM.Application.Dto.Product;
+using YMM.Application.Dto.ProductDtos;
 using YMM.Data.Entities;
 
 namespace YMM.Application.Abstract.Repositories

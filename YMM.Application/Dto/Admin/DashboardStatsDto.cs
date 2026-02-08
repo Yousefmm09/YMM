@@ -1,13 +1,14 @@
+using MimeKit.Encodings;
 using System;
 using System.Collections.Generic;
+using YMM.Application.Dto.ProductDtos;
+using YMM.Data.Entities;
 
 namespace YMM.Application.Dto.Admin
 {
     public class DashboardStatsDto
     {
-        // ========================================
-        // OVERVIEW STATS
-        // ========================================
+       
         public decimal TotalRevenue { get; set; }
         public decimal TotalRevenueChange { get; set; } // +15.5% for example
 
@@ -23,53 +24,37 @@ namespace YMM.Application.Dto.Admin
         public decimal AverageOrderValue { get; set; }
         public decimal AverageOrderValueChange { get; set; }
 
-        // ========================================
-        // TODAY'S STATS
-        // ========================================
+     
         public TodayStatsDto Today { get; set; } = null!;
 
-        // ========================================
-        // THIS WEEK
-        // ========================================
+      
         public WeekStatsDto ThisWeek { get; set; } = null!;
 
-        // ========================================
-        // THIS MONTH
-        // ========================================
+
         public MonthStatsDto ThisMonth { get; set; } = null!;
 
-        // ========================================
-        // ALERTS & NOTIFICATIONS
-        // ========================================
+     
         public DashboardAlertsDto Alerts { get; set; } = null!;
 
-        // ========================================
-        // QUICK STATS
-        // ========================================
+
         public int PendingOrders { get; set; }
         public int ProcessingOrders { get; set; }
         public int ShippedOrders { get; set; }
-        public int LowStockProducts { get; set; }
-        public int OutOfStockProducts { get; set; }
+        public List<LowStockProduct> LowStockProducts { get; set; }
+        public List<OutofStock>OutOfStockProducts { get; set; }
         public int PendingReviews { get; set; }
         public int NewCustomersThisMonth { get; set; }
 
-        // ========================================
-        // RECENT ACTIVITY
-        // ========================================
+      
         public List<RecentOrderDto> RecentOrders { get; set; } = new List<RecentOrderDto>();
         public List<RecentCustomerDto> RecentCustomers { get; set; } = new List<RecentCustomerDto>();
 
-        // ========================================
-        // CHARTS DATA
-        // ========================================
+   
         public List<ChartDataPointDto> SalesChartData { get; set; } = new List<ChartDataPointDto>(); // Last 7 days
         public List<ChartDataPointDto> OrdersChartData { get; set; } = new List<ChartDataPointDto>(); // Last 7 days
     }
 
-    // ========================================
-    // SUPPORTING DTOs
-    // ========================================
+
 
     public class TodayStatsDto
     {
@@ -113,6 +98,10 @@ namespace YMM.Application.Dto.Admin
         public decimal Total { get; set; }
         public string Status { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+    }
+    public class OutofStock
+    {
+       public string ProductName {  get; set; }
     }
 
     public class RecentCustomerDto

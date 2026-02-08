@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Common;
-using YMM.Application.Dto.Product;
+using YMM.Application.Dto.ProductDtos;
 
 namespace YMM.Api.Controllers
 {
