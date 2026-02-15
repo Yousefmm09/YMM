@@ -179,7 +179,7 @@ app.UseMiddleware<YMM.Api.Performance.PerformanceMiddleware>();
 app.UseMiddleware<RequestTrackMiddleware>();
 
 app.UseAuthentication();
+app.UseMiddleware<CheckAccountStatusMiddleware>();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();

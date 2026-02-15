@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Dto.Admin;
+using YMM.Application.Dto.Common;
+using YMM.Application.Dto.ProductDtos;
 using YMM.Application.Dto.Response;
 
 namespace YMM.Application.Abstract.Services
@@ -11,5 +13,10 @@ namespace YMM.Application.Abstract.Services
     public interface IAdminService
     {
         public Task<ApiResponse<DashboardStatsDto>> DashboardStats();
+        Task<PaginatedResponse<ProductDto>> getActiveProduct(PaginationParams paginationParams);
+        Task<ApiResponse<ProductDto>> MakeProductDeAcitve(int productId);
+        Task<ApiResponse<ProductDto>> MakeProductAcitve(int productId);
+        Task<ApiResponse<string>> UpdateQuantityProduct(int quantity, int pId, int pVariantsId);
+        Task<string> UpdateUserAccountStatus(string userId,string userAccountStatus);
     }
 }

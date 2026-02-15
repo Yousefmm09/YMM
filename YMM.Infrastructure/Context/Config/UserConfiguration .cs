@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,6 +37,8 @@ namespace YMM.Infrastructure.Context.Config
 
             builder.Property(x => x.CreatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");
+            builder.Property(x => x.SecurityStamp)
+                .HasDefaultValueSql("sysdatetime()");
         }
     }
 }
