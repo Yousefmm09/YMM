@@ -9,7 +9,7 @@ using YMM.Application.Abstract;
 using YMM.Application.Abstract.Repositories;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Common;
-using YMM.Application.Dto.Product;
+using YMM.Application.Dto.ProductDtos;
 using YMM.Application.Dto.Response;
 using YMM.Data.Entities;
 

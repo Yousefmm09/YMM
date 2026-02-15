@@ -53,18 +53,18 @@ namespace YMM.Api.Controllers
             }
             return BadRequest(ModelState.Select(x => x.Value));
         }
-        //[HttpPost("VerifyOtp")]
-        //public async Task<IActionResult> VerifyOtp(string email, string otp)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var rfToken = await _Auth.VerifyOtpAsync(email, otp);
-        //        if (rfToken == null)
-        //            return BadRequest(rfToken);
-        //        return Ok(rfToken);
-        //    }
-        //    return BadRequest(ModelState.Select(x => x.Value));
-        //}
+        [HttpPost("VerifyOtp")]
+        public async Task<IActionResult> VerifyOtp(string email,string otp)
+        {
+            if (ModelState.IsValid)
+            {
+                var rfToken = await _Auth.VerifyOtpAsync(email,otp);
+                if (rfToken == null)
+                    return BadRequest(rfToken);
+                return Ok(rfToken);
+            }
+            return BadRequest(ModelState.Select(x => x.Value));
+        }
         //[HttpPost("ResendOtp")]
         //public async Task<IActionResult> ResendOtp(string email)
         //{

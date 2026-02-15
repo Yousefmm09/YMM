@@ -12,6 +12,7 @@ using YMM.Application.Dto.Review;
 using YMM.Data.Entities;
 using YMM.Data.Entities.Identity;
 using YMM.Infrastructure.Context;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace YMM.Infrastructure.Immplementation
 {
@@ -83,6 +84,28 @@ namespace YMM.Infrastructure.Immplementation
             }
             return "not found your review";
         }
+        public async Task<string> ApproveReview(int reviewId)
+        {
+            var getReview=_appDb.Reviews.Where(x=>x.Id==reviewId && x.Status=="Pending").FirstOrDefault();
+            if (getReview == null)
+                return "Not found Review has status Pending";
+            getReview.Status = "Approve";
+            await _appDb.SaveChangesAsync();
+            //update Avg in  Product Table
+            var getProductId = _appDb.Reviews.Where(x => x.Id == reviewId).Select(x => x.ProductId).FirstOrDefault();
+            var getAllProductR = await _appDb.Reviews
+                .Where( x=>x.ProductId == getProductId && x.Status == "Approve")
+                .ToListAsync();
+            if (getAllProductR == null)
+                return "Not Found Product Review has status Approve";
+            var ClacAvg = (decimal)getAllProductR.Average(x => x.Rating);
+
+            var UpdateAvgRateing = await _appDb.Products.Where(x => x.Id == getProductId).FirstOrDefaultAsync();
+            UpdateAvgRateing.AverageRating = ClacAvg;
+            await _appDb.SaveChangesAsync();
+            return "Approve the review is success";
+
+        }
 
         public async Task<ApiResponse<List<GetReviewDto>>> GetReviewsByProductIdAsync(int productId)
         {
@@ -110,7 +133,7 @@ namespace YMM.Infrastructure.Immplementation
                 );
         }
 
-        public async Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId)
+        public async Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId,CancellationToken ct)
         {
             var query = _appDb.Reviews.Include(x => x.Product).Where(x=>x.ProductId==productId).AsNoTracking().AsQueryable();
             if(query.Count() < 0)
@@ -135,7 +158,7 @@ namespace YMM.Infrastructure.Immplementation
                 OneStarCount = query.Count(x => x.Rating == 1),
                 TotalReviews = countofReviews,
             });
-            var result = await SummryOfReview.FirstOrDefaultAsync();
+            var result = await SummryOfReview.FirstOrDefaultAsync(ct);
             return new ApiResponse<ReviewSummaryDto>
                 (
                     Success: true,

@@ -17,5 +17,6 @@ namespace YMM.Application.Abstract.Services
         Task<ApiResponse<string>> ResetPasswordAsync(ResetPasswordRequestDto dto);
         Task<ApiResponse<string>> LogoutAsync(string userId);
         Task<ApiResponse<LoginResponseDto>> RefreshTokenAsync(string refreshToken);
+        Task<string> VerifyOtpAsync(string email,string otp);
     }
 }

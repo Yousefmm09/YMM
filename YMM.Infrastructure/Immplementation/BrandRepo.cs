@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YMM.Application.Abstract.Repositories;
-using YMM.Application.Dto.Product;
+using YMM.Application.Dto.ProductDtos;
 using YMM.Data.Entities;
 using YMM.Infrastructure.Context;
 

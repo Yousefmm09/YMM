@@ -44,134 +44,6 @@ public class AuthService : IAuthService
       var register= await _auth.RegisterAsync(dto);
         return register;
     }
-    public async Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto dto)
-    {
-        try
-        {
-            // 1. Find user by email
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-
-            if (user == null)
-            {
-                return new ApiResponse<LoginResponseDto>
-                (
-                    Success: false,
-                    Message: "Invalid email or password",
-                    Data: null,
-                    Errors: new[] { "User not found" },
-                    TraceId: Guid.NewGuid().ToString()
-                );
-            }
-
-            // 2. Check if user is active
-            if (!user.IsActive)
-            {
-                return new ApiResponse<LoginResponseDto>
-                (
-                    Success: false,
-                    Message: "Account is deactivated",
-                    Data: null,
-                    Errors: new[] { "Your account has been deactivated. Please contact support." },
-                    TraceId: Guid.NewGuid().ToString()
-                );
-            }
-
-            // 3. Check if email is verified
-            if (!user.EmailConfirmed)
-            {
-                return new ApiResponse<LoginResponseDto>
-                (
-                    Success: false,
-                    Message: "Email not verified",
-                    Data: null,
-                    Errors: new[] { "Please verify your email before logging in" },
-                    TraceId: Guid.NewGuid().ToString()
-                );
-            }
-
-            // 4. Check password
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(
-                user,
-                dto.Password,
-                lockoutOnFailure: true);
-
-            if (!signInResult.Succeeded)
-            {
-                if (signInResult.IsLockedOut)
-                {
-                    return new ApiResponse<LoginResponseDto>
-                    (
-                        Success: false,
-                        Message: "Account locked",
-                        Data: null,
-                        Errors: new[] { "Your account has been locked due to multiple failed login attempts" },
-                        TraceId: Guid.NewGuid().ToString()
-                    );
-                }
-
-                return new ApiResponse<LoginResponseDto>
-                (
-                    Success: false,
-                    Message: "Invalid email or password",
-                    Data: null,
-                    Errors: new[] { "Incorrect password" },
-                    TraceId: Guid.NewGuid().ToString()
-                );
-            }
-
-            // 5. Generate JWT token
-            var token = await GenerateJwtToken(user);
-            var refreshToken = GenerateRefreshToken();
-
-            // 6. Save refresh token to database
-            user.LastLogin = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
-
-            // 7. Get user roles
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault() ?? "Customer";
-
-            // 8. Return response
-            var response = new LoginResponseDto
-            {
-                UserId = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                Token = token,
-                RefreshToken = refreshToken,
-                TokenExpiration = DateTime.UtcNow.AddHours(24),
-                Role = role
-            };
-
-            _logger.LogInformation("User logged in successfully: {Email}", dto.Email);
-
-            return new ApiResponse<LoginResponseDto>
-            (
-                Success: true,
-                Message: "Login successful",
-                Data: response,
-                Errors: null,
-                TraceId: Guid.NewGuid().ToString()
-            );
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error during login for email: {Email}", dto.Email);
-
-            return new ApiResponse<LoginResponseDto>
-            (
-                Success: false,
-                Message: "An error occurred during login",
-                Data: null,
-                Errors: new[] { ex.Message },
-                TraceId: Guid.NewGuid().ToString()
-            );
-        }
-    }
-
-    // ========================================
-    // VERIFY EMAIL
-    // ========================================
     public async Task<ApiResponse<string>> VerifyEmailAsync(VerifyEmailRequestDto dto)
     {
         try
@@ -243,47 +115,6 @@ public class AuthService : IAuthService
         }
     }
 
-    // ========================================
-    // HELPER METHODS
-    // ========================================
-    private async Task<string> GenerateJwtToken(User user)
-    {
-        var roles = await _userManager.GetRolesAsync(user);
-
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
-
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(24),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    private string GenerateRefreshToken()
-    {
-        var randomNumber = new byte[32];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        return Convert.ToBase64String(randomNumber);
-    }
-
     public async Task<ApiResponse<string>> ResendVerificationEmailAsync(string email)
     {
         var emailResend= await _auth.ResendVerificationEmailAsync(email);
@@ -310,37 +141,37 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
     {
-        var rfToken = new RefreshToken
-        {
-            Token = refreshToken
-        };
-        var refresh= await _auth.CreatRefreshToken(rfToken);
-        var refreshTokenResponse = new RefreshToken
-        {
-            Token = refresh.Token,
-            ExpiresAt = refresh.ExpiresAt,
-            IsRevoked = refresh.IsRevoked,
-            UserId = refresh.UserId
-        };
+       var rtoken=await _auth.CreatRefreshToken(refreshToken);
         var loginResponseDto = new LoginResponseDto
         {
-            UserId = refresh.User.Id,
-            UserName = refresh.User.UserName,
-            Email = refresh.User.Email,
-            Token = refresh.Token,
-            RefreshToken = refresh.Token,
-            TokenExpiration = refresh.ExpiresAt,
-            Role = (await _userManager.GetRolesAsync(refresh.User)).FirstOrDefault() ?? "Customer"
+            UserId = rtoken.User.Id,
+            UserName = rtoken.User.UserName,
+            Email = rtoken.User.Email,
+            Token = rtoken.Token,
+            RefreshToken = rtoken.Token,
+            TokenExpiration = rtoken.ExpiresAt,
+            Role = (await _userManager.GetRolesAsync(rtoken.User)).FirstOrDefault() ?? "Customer"
         };
 
         return new ApiResponse<LoginResponseDto>
         (
             Success: true,
             Message: "Token refreshed successfully",
-            Data: loginResponseDto,
+            Data: null,
             Errors: null,
             TraceId: Guid.NewGuid().ToString()
         );
 
+    }
+    public async Task<string> VerifyOtpAsync(string email,string otp)
+    {
+        var res=await _auth.VerifyOtpAsync(email,otp);
+        return res;
+    }
+
+    public async Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto dto)
+    {
+         var res=await _auth.LoginAsync(dto);
+        return res;
     }
 }

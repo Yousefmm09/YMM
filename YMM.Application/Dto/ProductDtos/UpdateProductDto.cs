@@ -4,19 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YMM.Application.Dto.Product
+namespace YMM.Application.Dto.ProductDtos
 {
-    public class ProductDto
+    public class UpdateProductDto
     {
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
+        public string Name { get; set; }
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
-        public string BrandName { get; set; }
-        public string CategoryName { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string Slug { get; set; } = null!;
-        public string SKU {  get; set; }= null!;
+        public int CategoryId { get; set; }
+        public int BrandId { get; set; }
         public List<ProductVariantDto> Variants { get; set; } = new List<ProductVariantDto>();
+
     }
 }

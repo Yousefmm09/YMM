@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using YMM.Application.Abstract.Repositories;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Immplementation;
 using YMM.Infrastructure.Caching;
@@ -24,6 +25,7 @@ namespace YMM.Application
             service.AddTransient<IReviewService, ReviewService>(); 
             service.AddTransient<IWishListService, WishListService>();
             service.AddTransient<ICouponsService,CouponService>();
+            service.AddTransient<IAdminService, AdminService>();
             return service;
         }
 

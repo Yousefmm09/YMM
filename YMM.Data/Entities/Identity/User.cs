@@ -11,6 +11,7 @@ namespace YMM.Data.Entities.Identity
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime SecurityStampDate { get; set; } = DateTime.UtcNow;
         public DateTime? LastLogin { get; set; }
 
         // Navigation Properties
@@ -25,5 +26,6 @@ namespace YMM.Data.Entities.Identity
         public virtual ICollection<CouponUsage> CouponUsages { get; set; } = new List<CouponUsage>();
         public virtual ICollection<ReviewHelpful> ReviewHelpfuls { get; set; } = new List<ReviewHelpful>();
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+        public string? AccountStatus { get; set;  }
     }
 }

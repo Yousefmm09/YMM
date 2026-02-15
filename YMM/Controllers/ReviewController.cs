@@ -55,9 +55,9 @@ namespace YMM.Api.Controllers
             return BadRequest(result);
         }
         [HttpGet("summary/{productId}")]
-        public async Task<IActionResult> GetReviewSummaryByProductId([FromRoute] int productId)
+        public async Task<IActionResult> GetReviewSummaryByProductId([FromRoute] int productId,CancellationToken ct)
         {
-            var result = await _reviewService.GetReviewSummaryByProductIdAsync(productId);
+            var result = await _reviewService.GetReviewSummaryByProductIdAsync(productId,ct);
             if (result.Success)
             {
                 return Ok(result);
@@ -83,6 +83,16 @@ namespace YMM.Api.Controllers
                 return Ok(result);
             }
             return BadRequest(result);
+        }
+        [HttpPost("ApproveReview/{Id}")]
+        public async Task<IActionResult> ApproveReview([FromRoute] int Id)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _reviewService.ApproveReview(Id);
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
         }
     }
 }

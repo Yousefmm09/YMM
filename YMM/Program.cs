@@ -19,24 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 // ============================================
 // PERFORMANCE: Database Configuration
 // ============================================
-builder.Services.AddDbContext<AppDb>(options =>
+builder.Services.AddDbContextFactory<AppDb>(options =>
 {
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions =>
-        {
-            // Performance: Enable command timeout and retry logic
-            //sqlOptions.CommandTimeout(30);
-            //sqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
-            //// Performance: Use split queries for better performance with large includes
-            //sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-        });
-    
-    // Performance: Disable sensitive data logging in production
-    if (!builder.Environment.IsDevelopment())
-    {
-        options.EnableSensitiveDataLogging(false);
-    }
+        builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 // ============================================
@@ -85,6 +71,26 @@ builder.Services.AddOutputCache(options =>
         builder.Expire(TimeSpan.FromMinutes(10))
                .Tag("categories"));
 });
+
+// ============================================
+// CORS Configuration for React Frontend
+// ============================================
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("ReactAppPolicy", policy =>
+//    {
+//        policy.WithOrigins(
+//            "http://localhost:3000",  // Next.js default dev port
+//            "http://localhost:3001",
+//            "https://localhost:3000",
+//            "https://localhost:3001"
+//        )
+//        .AllowAnyMethod()
+//        .AllowAnyHeader()
+//        .AllowCredentials()
+//        .WithExposedHeaders("Content-Disposition"); // For file downloads
+//    });
+//});
 
 builder.Services.AddControllers();
 builder.Services.Configure<EmailSettings>(
@@ -165,12 +171,15 @@ using (var scope = app.Services.CreateScope())
 }
 app.UseHttpsRedirection();
 
+// Enable CORS
+app.UseCors("ReactAppPolicy");
+
 // Performance monitoring middleware
 app.UseMiddleware<YMM.Api.Performance.PerformanceMiddleware>();
 app.UseMiddleware<RequestTrackMiddleware>();
 
 app.UseAuthentication();
+app.UseMiddleware<CheckAccountStatusMiddleware>();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();

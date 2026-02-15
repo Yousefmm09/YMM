@@ -40,10 +40,14 @@ namespace YMM.Application.Immplementation
             var result = _reviewRepository.GetReviewsByProductIdAsync(productId);
             return result;
         }
-
-        public Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId)
+       public async Task<string> ApproveReview(int reviewId)
         {
-            var result = _reviewRepository.GetReviewSummaryByProductIdAsync(productId);
+            var res =  await _reviewRepository.ApproveReview(reviewId);
+            return res;
+        }
+        public Task<ApiResponse<ReviewSummaryDto>> GetReviewSummaryByProductIdAsync(int productId,CancellationToken ct)
+        {
+            var result = _reviewRepository.GetReviewSummaryByProductIdAsync(productId,ct);
             return result;
         }
 

@@ -9,12 +9,14 @@ namespace YMM.Application.Abstract.Repositories
 {
     public interface IAuthRepo
     {
-        Task<RefreshToken> CreatRefreshToken(RefreshToken refreshToken);
+         Task<RefreshToken> CreatRefreshToken(string refreshToken);
+        Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
         Task<RefreshToken> checkrfToken(string rftoken);
         Task<ApiResponse<RegisterResponseDto>> RegisterAsync(RegisterRequestDto dto);
         Task<ApiResponse<string>> ResendVerificationEmailAsync(string email);
         Task<ApiResponse<string>> ForgotPasswordAsync(ForgotPasswordRequestDto dto);
         Task<ApiResponse<string>> ResetPasswordAsync(ResetPasswordRequestDto dto);
         Task<ApiResponse<string>> LogoutAsync(string userId);
+        Task<string> VerifyOtpAsync(string email,string otp);
     }
 }
