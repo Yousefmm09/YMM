@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -31,8 +32,9 @@ namespace YMM.Infrastructure.Immplementation
         private readonly IEmailService _emailService;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IBackgroundJobClient _Job;
 
-        public AuthRepo(AppDb context, UserManager<User> userManager, IConfiguration configuration, IEmailService emailService,ILogger<AuthRepo> logger, SignInManager<User> signInManager)
+        public AuthRepo(AppDb context, UserManager<User> userManager, IBackgroundJobClient Job, IConfiguration configuration, IEmailService emailService,ILogger<AuthRepo> logger, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
@@ -40,6 +42,7 @@ namespace YMM.Infrastructure.Immplementation
             _logger = logger;
             _signInManager = signInManager;
             _configuration = configuration;
+            _Job = Job;
         }
         public async Task<ApiResponse<RegisterResponseDto>> RegisterAsync(RegisterRequestDto dto)
         {
@@ -144,7 +147,8 @@ namespace YMM.Infrastructure.Immplementation
                 await _context.SaveChangesAsync();
                 //var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                 //var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailToken));
-                var sendEmail = await _emailService.SendEmail(newUser.Email, " The otp to verify email " + sendOtp);
+                //var sendEmail = await _emailService.SendEmail(newUser.Email, " The otp to verify email " + sendOtp);
+                 _Job.Enqueue(() => _emailService.SendEmail(newUser.Email, " The otp to verify email " + sendOtp));
                 await transaction.CommitAsync();
 
                 // 9. Return response

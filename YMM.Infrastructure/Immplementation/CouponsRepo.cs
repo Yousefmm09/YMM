@@ -154,7 +154,7 @@ namespace YMM.Infrastructure.Immplementation
                    Success: false,
                    Message: "Minimum purchase amount not reached ",
                    Data: null,
-                   Errors: new[] { "the code not active" },
+                   Errors: new[] { "" },
                    TraceId: Guid.NewGuid().ToString()
                    );
             var CodeUsage = new CouponUsage

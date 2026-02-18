@@ -100,7 +100,6 @@ namespace YMM.Infrastructure.Immplementation
                             where r.Id == ur.RoleId
                             where r.Name == "Customer"
                             select u;
-             await Customers.AsNoTracking().ToListAsync();
             return  await Customers.CountAsync();
         }
         //private Task<ApiResponse<DashboardStatsDto>> OrderStats(DashboardStatsDto dto)

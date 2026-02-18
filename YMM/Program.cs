@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -72,26 +73,12 @@ builder.Services.AddOutputCache(options =>
                .Tag("categories"));
 });
 
-// ============================================
-// CORS Configuration for React Frontend
-// ============================================
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("ReactAppPolicy", policy =>
-//    {
-//        policy.WithOrigins(
-//            "http://localhost:3000",  // Next.js default dev port
-//            "http://localhost:3001",
-//            "https://localhost:3000",
-//            "https://localhost:3001"
-//        )
-//        .AllowAnyMethod()
-//        .AllowAnyHeader()
-//        .AllowCredentials()
-//        .WithExposedHeaders("Content-Disposition"); // For file downloads
-//    });
-//});
-
+builder.Services.AddHangfire(op =>
+op.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"))
+.UseRecommendedSerializerSettings()
+.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+.UseSimpleAssemblyNameTypeSerializer());
+builder.Services.AddHangfireServer();
 builder.Services.AddControllers();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings")
@@ -170,14 +157,13 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.AddRoles(services);
 }
 app.UseHttpsRedirection();
-
+app.UseHangfireDashboard("/hangfire");
 // Enable CORS
 app.UseCors("ReactAppPolicy");
 
 // Performance monitoring middleware
 app.UseMiddleware<YMM.Api.Performance.PerformanceMiddleware>();
 app.UseMiddleware<RequestTrackMiddleware>();
-
 app.UseAuthentication();
 app.UseMiddleware<CheckAccountStatusMiddleware>();
 app.UseAuthorization();
