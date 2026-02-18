@@ -9,6 +9,7 @@ using YMM.Application.Dto.Category;
 using YMM.Application.Dto.Common;
 using YMM.Application.Dto.Response;
 using YMM.Data.Entities;
+using YMM.Infrastructure.Context.Config;
 
 namespace YMM.Application.Immplementation
 {
@@ -19,18 +20,24 @@ namespace YMM.Application.Immplementation
         {
             _category = categories;
         }
-        public async Task<string> AddCategory(CategoryDto categoryName)
+        public async Task<CategoryResponse> AddCategory(CreatCategoryDto categoryName)
         {
+            var slug = Helper.SlugHelper.GenerateSlug(categoryName.Name);
             var categoryNameExist = new Category
             {
                 Name = categoryName.Name,
                 Description = categoryName.Description,
-                Slug = categoryName.Slug
+                Slug = slug,
             };
             var category = await _category.AddAsync(categoryNameExist);
-            if(category == null) 
-                return "Failed to add category";
-            return "Category added successfully";  
+            var res = new CategoryResponse
+            (
+                name: categoryNameExist.Name,
+                slug: categoryNameExist.Slug,
+                desc: categoryNameExist.Description,
+                IsActive: categoryNameExist.IsActive
+            );
+            return res;
         }
 
         public async Task<ApiResponse<string>> DeleteCategory(int id)

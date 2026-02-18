@@ -1,5 +1,8 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -9,6 +12,7 @@ using YMM.Api.Middleware;
 using YMM.Application;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Auth;
+using YMM.Application.FluentValidation;
 using YMM.Application.Immplementation;
 using YMM.Application.Seeder;
 using YMM.Infrastructure;
@@ -128,7 +132,11 @@ builder.Services.AddAuthorization();
 builder.Services
     .AddServiceRegistration(builder.Configuration)
     .ApplicationRegist();
-
+// fluent validation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(
+    typeof(ApplicationAssemblyMarker).Assembly);
 // Performance: Register caching service
 
 // Performance: Register metrics
@@ -136,10 +144,7 @@ builder.Services.AddSingleton<YMM.Api.Performance.PerformanceMetrics>();
 
 var app = builder.Build();
 
-// ============================================
-// PERFORMANCE: Middleware Pipeline
-// ============================================
-// Response compression should be first
+
 app.UseResponseCompression();
 
 // Output cache

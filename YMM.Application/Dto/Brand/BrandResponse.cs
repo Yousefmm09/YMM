@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace YMM.Application.Dto.Brand
 {
-    public class CreatBrandDto
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-    }
+    public record BrandResponse(string name, string slug, string desc);
+    
 }
