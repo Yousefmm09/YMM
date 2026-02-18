@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,10 +20,12 @@ namespace YMM.Infrastructure.Immplementation
     {
         private readonly AppDb _appDb;
         private readonly IEmailService _emailService;
-        public OrderRepo(AppDb appDb, IEmailService emailService)
+        private readonly IBackgroundJobClient _Job;
+        public OrderRepo(AppDb appDb, IEmailService emailService, IBackgroundJobClient Job)
         {
             _appDb = appDb;
             _emailService = emailService;
+            _Job= Job;
         }
         public Task<ApiResponse<OrderDto>> CancelOrderAsync(string userId, int orderId, CancelOrderDto dto)
         {
@@ -124,8 +127,11 @@ namespace YMM.Infrastructure.Immplementation
             };
 
             await _appDb.OrderStatusHistories.AddAsync(statusHistory);
-            await _emailService.SendEmail(cart.User.Email, "Order Confirmation " +
-                $"Your order {order.OrderNumber} has been placed successfully.");
+            _Job.Enqueue(() => _emailService.SendEmail(cart.User.Email, "Order Confirmation " +
+                $"Your order {order.OrderNumber} has been placed successfully."));
+            //await _emailService.SendEmail(cart.User.Email, "Order Confirmation " +
+            //    $"Your order {order.OrderNumber} has been placed successfully.");
+            
             // 10. CLEAR CART
             _appDb.CartItems.RemoveRange(cart.Items);
             cart.Subtotal = 0;

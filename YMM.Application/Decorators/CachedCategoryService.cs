@@ -3,6 +3,7 @@ using YMM.Application.Dto.Category;
 using YMM.Application.Dto.Common;
 using YMM.Application.Dto.Response;
 using YMM.Infrastructure.Caching;
+using YMM.Infrastructure.Context.Config;
 
 namespace YMM.Application.Decorators
 {
@@ -22,7 +23,7 @@ namespace YMM.Application.Decorators
             _cacheService = cacheService;
         }
 
-        public async Task<string> AddCategory(CategoryDto categoryName)
+        public async Task<CategoryResponse> AddCategory(CreatCategoryDto categoryName)
         {
             var result = await _innerService.AddCategory(categoryName);
             await _cacheService.RemoveByPrefixAsync(CategoryPaginationCacheKeyPrefix);

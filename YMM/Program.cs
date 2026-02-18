@@ -1,4 +1,8 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -8,6 +12,7 @@ using YMM.Api.Middleware;
 using YMM.Application;
 using YMM.Application.Abstract.Services;
 using YMM.Application.Dto.Auth;
+using YMM.Application.FluentValidation;
 using YMM.Application.Immplementation;
 using YMM.Application.Seeder;
 using YMM.Infrastructure;
@@ -72,26 +77,12 @@ builder.Services.AddOutputCache(options =>
                .Tag("categories"));
 });
 
-// ============================================
-// CORS Configuration for React Frontend
-// ============================================
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("ReactAppPolicy", policy =>
-//    {
-//        policy.WithOrigins(
-//            "http://localhost:3000",  // Next.js default dev port
-//            "http://localhost:3001",
-//            "https://localhost:3000",
-//            "https://localhost:3001"
-//        )
-//        .AllowAnyMethod()
-//        .AllowAnyHeader()
-//        .AllowCredentials()
-//        .WithExposedHeaders("Content-Disposition"); // For file downloads
-//    });
-//});
-
+builder.Services.AddHangfire(op =>
+op.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"))
+.UseRecommendedSerializerSettings()
+.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+.UseSimpleAssemblyNameTypeSerializer());
+builder.Services.AddHangfireServer();
 builder.Services.AddControllers();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings")
@@ -141,7 +132,11 @@ builder.Services.AddAuthorization();
 builder.Services
     .AddServiceRegistration(builder.Configuration)
     .ApplicationRegist();
-
+// fluent validation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(
+    typeof(ApplicationAssemblyMarker).Assembly);
 // Performance: Register caching service
 
 // Performance: Register metrics
@@ -149,10 +144,7 @@ builder.Services.AddSingleton<YMM.Api.Performance.PerformanceMetrics>();
 
 var app = builder.Build();
 
-// ============================================
-// PERFORMANCE: Middleware Pipeline
-// ============================================
-// Response compression should be first
+
 app.UseResponseCompression();
 
 // Output cache
@@ -170,14 +162,13 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.AddRoles(services);
 }
 app.UseHttpsRedirection();
-
+app.UseHangfireDashboard("/hangfire");
 // Enable CORS
 app.UseCors("ReactAppPolicy");
 
 // Performance monitoring middleware
 app.UseMiddleware<YMM.Api.Performance.PerformanceMiddleware>();
 app.UseMiddleware<RequestTrackMiddleware>();
-
 app.UseAuthentication();
 app.UseMiddleware<CheckAccountStatusMiddleware>();
 app.UseAuthorization();

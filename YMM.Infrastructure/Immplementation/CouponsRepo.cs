@@ -154,7 +154,7 @@ namespace YMM.Infrastructure.Immplementation
                    Success: false,
                    Message: "Minimum purchase amount not reached ",
                    Data: null,
-                   Errors: new[] { "the code not active" },
+                   Errors: new[] { "" },
                    TraceId: Guid.NewGuid().ToString()
                    );
             var CodeUsage = new CouponUsage
@@ -196,7 +196,7 @@ namespace YMM.Infrastructure.Immplementation
                 DiscountValue = dto.DiscountValue,
                 MinPurchaseAmount = dto.MinPurchaseAmount,
                 MaxDiscountAmount = dto.MaxDiscountAmount,
-                StartDate = dto.StartDate,
+                StartDate = DateTime.UtcNow,
                 EndDate = dto.EndDate,
                 UsageLimit = dto.UsageLimit,
                 UsageLimitPerUser = dto.UsageLimitPerUser,
@@ -261,6 +261,33 @@ namespace YMM.Infrastructure.Immplementation
                 query = query.Where(c => c.IsActive == dto.IsActive.Value);
             }
             var totalItems = await query.CountAsync();
+            if(!string.IsNullOrWhiteSpace(dto.Search))
+            {
+                var search = await query.Where(x => EF.Functions.Like(x.Code, $"%{dto.Search}%"))
+                    .Select(c => new CouponDto
+                    {
+                        Id = c.Id,
+                        Code = c.Code,
+                        Description = c.Description,
+                        DiscountType = c.DiscountType,
+                        DiscountValue = c.DiscountValue,
+                        MinPurchaseAmount = c.MinPurchaseAmount,
+                        MaxDiscountAmount = c.MaxDiscountAmount,
+                        StartDate = c.StartDate,
+                        EndDate = c.EndDate,
+                        UsageLimit = c.UsageLimit,
+                        UsageLimitPerUser = c.UsageLimitPerUser,
+                        IsActive = c.IsActive
+                    }).ToListAsync();
+                return new ApiResponse<List<CouponDto>>
+             (
+                 Success: true,
+                 Message: "Coupons retrieved successfully",
+                 Data: search,
+                 Errors: null,
+                 TraceId: Guid.NewGuid().ToString()
+             );
+            }
             var coupons = await query
                 .Skip((dto.Page - 1) * dto.PageSize)
                 .Take(dto.PageSize)

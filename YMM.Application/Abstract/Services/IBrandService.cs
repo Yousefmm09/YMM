@@ -12,7 +12,7 @@ namespace YMM.Application.Abstract.Services
 {
     public interface IBrandService
     {
-        Task<string> AddBrand(CreatBrandDto brandName);
+        Task<BrandResponse> AddBrand(CreatBrandDto brandName);
         Task<ApiResponse<BrandDto>> GetBrandById(int id);
         Task<ApiResponse<string>> DeleteBrand(int brandId);
         Task<ApiResponse<BrandFilterDto>> UpdateBrand(BrandFilterDto brand);

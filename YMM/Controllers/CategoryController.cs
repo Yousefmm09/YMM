@@ -21,7 +21,7 @@ namespace YMM.Api.Controllers
             _Categories = categories;
         }
         [HttpPost("AddCategory")]
-        public async Task<IActionResult> AddCategory([FromBody] CategoryDto category)
+        public async Task<IActionResult> AddCategory([FromBody] CreatCategoryDto category)
         {
 
             var result = await _Categories.AddCategory(category);

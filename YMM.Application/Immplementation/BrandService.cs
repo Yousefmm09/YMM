@@ -20,18 +20,23 @@ namespace YMM.Application.Immplementation
             _brandRepo = brandRepo;
         }
 
-        public async Task<string> AddBrand(CreatBrandDto brandName)
+        public async Task<BrandResponse> AddBrand(CreatBrandDto brandName)
         {
+          var slug = Helper.SlugHelper.GenerateSlug(brandName.Name);
             var BrandDto = new Brand
             {
                 Name = brandName.Name,
                 Description = brandName.Description,
-                Slug = brandName.Slug
+                Slug = slug,
             };
             var brand = await _brandRepo.AddAsync(BrandDto);
-            if (brand == null)
-                return "Failed to add brand";
-            return "Brand added successfully";
+            var res = new BrandResponse
+            (
+                name: BrandDto.Name,
+                slug: BrandDto.Slug,
+                desc: BrandDto.Description
+            );
+            return res;
         }
 
         public async Task<ApiResponse<string>> DeleteBrand(int brandId)
